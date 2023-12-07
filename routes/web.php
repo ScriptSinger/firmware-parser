@@ -15,10 +15,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get(
-    '/',
-    [ExampleController::class, 'index']
-);
-
 
 Route::resource('/settings', SettingContrller::class);

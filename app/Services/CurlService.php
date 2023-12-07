@@ -2,16 +2,19 @@
 
 namespace App\Services;
 
-class ParserService
+use Illuminate\Support\Facades\Config;
+
+class CurlService
 {
     private $ch;
     private $host;
     private $options;
 
+
     // Возвращает новый экземпляр класса cURL с указанным хостом.
-    public static function app($host)
+    public static function app()
     {
-        return new self($host);
+        return new self(Config::get('curl.url'));
     }
 
     // Инициализирует сеанс cURL и устанавливает для параметров по умолчанию, таких как CURLOPT_RETURNTRANSFER, значение true.
@@ -21,11 +24,27 @@ class ParserService
         $this->host = $host;
         $this->options = array(CURLOPT_RETURNTRANSFER => true, CURLOPT_HTTPHEADER => array());
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
+        $this->set_config();
     }
+
     // Закрывает сеанс cURL.
     public function __destruct()
     {
         curl_close($this->ch);
+    }
+
+    private function set_config()
+    {
+        $settings = Config::get('curl.settings');
+        if (empty($settings)) {
+            // Обработка ошибки, например, выброс исключения или логгирование.
+            // Важно уведомить о том, что конфигурационные файлы не найдены или пусты.
+            throw new \RuntimeException('Curl configuration files not found or empty.');
+        }
+        curl_setopt_array($this->ch, $settings);
+        foreach ($settings as $key => $val) {
+            $this->options[$key] = $val;
+        }
     }
 
     // Устанавливает параметр для сеанса cURL.
