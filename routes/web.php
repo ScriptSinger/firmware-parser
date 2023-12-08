@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\SettingContrller;
+use App\Http\Controllers\StatisticController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,3 +18,4 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::resource('/settings', SettingContrller::class);
+Route::get('/', [StatisticController::class, 'index'])->name('statistic.index');
