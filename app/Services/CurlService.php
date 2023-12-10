@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Config;
 
+use function PHPUnit\Framework\throwException;
+
 class CurlService
 {
     private $ch;
@@ -12,9 +14,9 @@ class CurlService
 
 
     // Возвращает новый экземпляр класса cURL с указанным хостом.
-    public static function app()
+    public static function app($host)
     {
-        return new self(Config::get('curl.url'));
+        return new self($host);
     }
 
     // Инициализирует сеанс cURL и устанавливает для параметров по умолчанию, таких как CURLOPT_RETURNTRANSFER, значение true.
@@ -66,11 +68,17 @@ class CurlService
         return $this->options;
     }
 
-    // Устанавливает путь для сеанса cURL для сохранения и извлечения файлов cookie.
-    public function cookie($path)
+    public function setCookie($path)
     {
-        $this->set(CURLOPT_COOKIEJAR, $_SERVER['DOCUMENT_ROOT'] . '/' . $path);
-        $this->set(CURLOPT_COOKIEFILE, $_SERVER['DOCUMENT_ROOT'] . '/' . $path);
+        $cookieFile = storage_path("app/{$path}");
+        $this->set(CURLOPT_COOKIEJAR, $cookieFile);
+        return $this;
+    }
+
+    public function getCookie($path)
+    {
+        $cookieFile = storage_path("app/{$path}");
+        $this->set(CURLOPT_COOKIEFILE, $cookieFile);
         return $this;
     }
 
@@ -113,11 +121,9 @@ class CurlService
     // Устанавливает сеанс cURL для отправки запроса POST или нет, а также устанавливает поля POST, если данные предоставлены.
     public function post(array $data)
     {
-        if ($data === false) {
-            $this->set(CURLOPT_POST, false);
-            return $this;
+        if (empty($data)) {
+            throw new \InvalidArgumentException('Массив данных не может быть пустым.');
         }
-
         $this->set(CURLOPT_POST, true);
         $this->set(CURLOPT_POSTFIELDS, http_build_query($data));
         return $this;
