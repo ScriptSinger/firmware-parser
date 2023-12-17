@@ -2,40 +2,31 @@
 
 namespace App\Console\Commands;
 
-use App\Services\AuthService;
 use Illuminate\Console\Command;
+use App\Services\AuthService;
+use Illuminate\Support\Facades\Config;
 
 class AuthCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'auth:service';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    protected $signature = 'parser:auth {--config= : Название конфигурации (например, curl)}';
     protected $description = 'Command description';
 
-    /**
-     * Execute the console command.
-     */
     public function handle(AuthService $authService)
     {
-        $target = $this->ask('Введите URL-адрес цели (без "/" в конце) для установки куки в парсер');
-        $login = $this->ask('Введите логин');
-        $password = $this->secret('Введите пароль');
-        $array = [
-            'login' => $login,
-            'password' => $password
-        ];
-
-        $response = $authService->login($target, $array);
-
+        if ($this->option('config')) {
+            $config = $this->loadConfig();
+        } else {
+            $config['url']['domain'] = $this->ask('Введите домен (например, https://site.ru):');
+            $config['url']['path'] = $this->ask('Введите путь (например, /login):');
+            $config['credentials']['login'] = $this->ask('Введите логин:');
+            $config['credentials']['password'] = $this->secret('Введите пароль:');
+        }
+        $response = $authService->login($config);
         $this->info($response);
+    }
+
+    private function loadConfig()
+    {
+        return Config::get($this->option('config'));
     }
 }
