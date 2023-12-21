@@ -12,7 +12,7 @@ class FetchPathsService
     public function parsePagesAndInsertPaths($callback)
     {
 
-        $curl = CurlService::app(Config::get('curl.url'));
+        $curl = CurlService::app(Config::get('curl.url.domain'));
         $lastPage = $this->fetchLastPageNumber();
         $paths = [];
         for ($i = 0; $i < $lastPage; $i++) {

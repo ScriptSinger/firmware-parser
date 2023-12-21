@@ -25,7 +25,7 @@
                         <div class="small-box bg-info">
                             <div class="inner">
                                 <h3>{{ $pathCount }}</h3>
-                                <p>Страниц</p>
+                                <p>Количество путей</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-file"></i>
@@ -35,12 +35,12 @@
                         </div>
                     </div>
 
-                    {{-- <div class="col-lg-3 col-6">
+                    <div class="col-lg-3 col-6">
 
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <h3>53<sup style="font-size: 20px">%</sup></h3>
-                                <p>Bounce Rate</p>
+                                <h3>{{ $firmwaresCount }}</h3>
+                                <p>Количество прошивок</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
@@ -50,7 +50,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-3 col-6">
+                    {{-- <div class="col-lg-3 col-6">
 
                         <div class="small-box bg-warning">
                             <div class="inner">

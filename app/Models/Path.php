@@ -9,4 +9,9 @@ class Path extends Model
 {
     use HasFactory;
     protected $fillable = ['path'];
+
+    public function firmware()
+    {
+        return $this->hasOne(Firmware::class);
+    }
 }

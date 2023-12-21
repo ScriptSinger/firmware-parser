@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ExampleController;
+use App\Http\Controllers\FirmwareController;
 use App\Http\Controllers\SettingContrller;
 use App\Http\Controllers\StatisticController;
 use Illuminate\Support\Facades\Route;
@@ -18,4 +19,6 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::resource('/settings', SettingContrller::class);
+Route::resource('/firmwares', FirmwareController::class);
 Route::get('/', [StatisticController::class, 'index'])->name('statistic.index');
+Route::get('/download/{filename}', [FirmwareController::class, 'downloadFile'])->name('download');
